@@ -11,8 +11,6 @@ if __name__ == '__main__':
     args_nxm = parser.parse_args()
     n = args_nxm.n
     m = args_nxm.m
-    parser.add_argument("--save_train", type=str, default=f"train_{n}x{m}")
-    parser.add_argument("--save_test", type=str, default=f"test{n}x{m}")
     parser.add_argument('--data_dir', type=str, default=f'../data_multi/10t10t_{n}x{m}/')
     parser.add_argument('--training_set', type=str, default='training_100000')
     parser.add_argument('--test_set', type=str, default='test_5000')
@@ -52,9 +50,12 @@ if __name__ == '__main__':
     parser.add_argument('--cond_prob', type=str2bool, default=False)
     parser.add_argument('--data_parallel_test', action='store_true')
     parser.add_argument('--test_ckpt_tag', type=str, default=None)
+    parser.add_argument("--save_train", type=str, default=f"train_{n}x{m}_{parser.parse_args().continuous_context}")
+    parser.add_argument("--save_test", type=str, default=f"test{n}x{m}_{parser.parse_args().continuous_context}")
 
     t0 = time()
     args = parser.parse_args()
+    
     
     trainer = Trainer(args)
     if args.test:
