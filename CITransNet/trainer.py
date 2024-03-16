@@ -100,7 +100,12 @@ class Trainer(BaseTrainer):
                 self.misreports = ckpt['misreports']
 
     def train(self, args):
+        print("Training")
         self.load()
+        results = {
+            'revenue': [],
+            'regret': [],
+        }
         for epoch in range(self.start_epoch, args.n_epoch):
             profit_sum = 0
             regret_sum = 0
@@ -126,6 +131,11 @@ class Trainer(BaseTrainer):
 
             if (epoch + 1) % 2 == 0:
                 self.rho += args.delta_rho
+            results['revenue'].append(profit_sum/self.train_size)
+            results['regret'].append(regret_sum/self.train_size)
+            if os.path.exists(args.save_train):
+                with open(os.path.join(args.save_train, 'train.json'), 'w') as f:
+                    json.dump(results, f)
             logging.info(f"Train: epoch={epoch + 1}, loss={loss_sum/self.train_size:.5}, "
                          f"profit={(profit_sum)/self.train_size:.5}, "
                          f"regret={(regret_sum)/self.train_size:.5}, regret_max={regret_max:.5}")
@@ -161,6 +171,10 @@ class Trainer(BaseTrainer):
         regret_max = 0.0
         loss_sum = 0.0
         n_iter = 0.0
+        results = {
+            'revenue': [],
+            'regret': [],
+        }
         for i in tqdm(range(0, data_size, args.batch_test)):
             batch_indices = indices[i:i+args.batch_test]
             n_iter += len(batch_indices)
@@ -177,6 +191,10 @@ class Trainer(BaseTrainer):
 
             if valid == False:
                 logging.info(f"profit={(profit_sum)/n_iter:.5}, regret={(regret_sum)/n_iter:.5}")
-
+                results['revenue'].append(profit_sum/n_iter)
+                results['regret'].append(regret_sum/n_iter)
+                if os.path.exists(args.save_test):
+                    with open(os.path.join(args.save_test, 'test.json'), 'w') as f:
+                        json.dump(results, f)
         logging.info(f"Test: loss={loss_sum/data_size:.5}, profit={(profit_sum)/data_size:.5}, "
                      f"regret={(regret_sum)/data_size:.5}, regret_max={regret_max:.5}")

@@ -48,6 +48,11 @@ def misreportUtility(mechanism,batch_data,batchMisreports):
     batchTrueValuations     = batch_data[0]
     batch_bidder_context       =  batch_data[1]    # (bs, n_bidder, d)
     batch_item_context         = batch_data[2]     # (bs, n_item, d)
+    # print(f"""{batchTrueValuations.shape}
+    #     {batchMisreports.shape}
+    #     {batch_bidder_context.shape}
+    #     {batch_item_context.shape}
+    # """)
     nAgent             = batchTrueValuations.shape[-2]
     nObjects           = batchTrueValuations.shape[-1]
     batchSize          = batchTrueValuations.shape[0]
@@ -57,9 +62,11 @@ def misreportUtility(mechanism,batch_data,batchMisreports):
     V  = V.repeat(1,nbrInitializations, 1, 1)
     V  = V.unsqueeze(0)
     V  = V.repeat(nAgent, 1, 1, 1, 1) # (n_bidder, bs, n_init, n_bidder, n_item)
+    # print(f"V: {V.shape}")
 
     M  = batchMisreports.unsqueeze(0)
     M  = M.repeat(nAgent,1, 1, 1, 1)
+    # print(f"M: {M.shape}")
 
 
     mask1                                           = np.zeros((nAgent,nAgent,nObjects))
@@ -71,7 +78,14 @@ def misreportUtility(mechanism,batch_data,batchMisreports):
     mask2       = (torch.tensor(mask2).float()).to(device)
 
     V  = V.permute(1, 2, 0, 3, 4) # (bs, n_init, n_bidder, n_bidder, n_item)
+    # print(f"V: {V.shape}")
     M  = M.permute(1, 2, 0, 3, 4)
+    # print(f"M: {M.shape}")
+    # print(f"mask1: {mask1.shape}")
+    # print(f"mask2: {mask2.shape}")
+
+    # print(f"M*mask1: {(M*mask1).shape}")
+    # print(f"V*mask2: {(V*mask2).shape}")
 
     tensor      =  M*mask1 + V*mask2
 
