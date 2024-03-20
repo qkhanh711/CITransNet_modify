@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_misreport_init_train', type=int, default=1)
 
     parser.add_argument('--train_size', type=int, default=None)
-    parser.add_argument('--batch_size', type=int, default=500)
+    parser.add_argument('--batch_size', type=int, default=512)
     parser.add_argument('--n_epoch', type=int, default=80)
     parser.add_argument('--learning_rate', type=float, default=1e-3)
 
@@ -44,8 +44,8 @@ if __name__ == '__main__':
     parser.add_argument('--lamb_update_freq', type=int, default=6)
     parser.add_argument('--rho', type=float, default=1)
     parser.add_argument('--delta_rho', type=float, default=5)
-    parser.add_argument('--v_min', type=float, default=0)
-    parser.add_argument('--v_max', type=float, default=1)
+    parser.add_argument('--v_min', type=float, default=2)
+    parser.add_argument('--v_max', type=float, default=3)
     parser.add_argument('--data_parallel', type=str2bool, default=False)
     parser.add_argument('--continuous_context', type=str2bool, default=True)
     parser.add_argument('--cond_prob', type=str2bool, default=False)
