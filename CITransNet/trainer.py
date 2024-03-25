@@ -136,7 +136,9 @@ class Trainer(BaseTrainer):
                 self.rho += args.delta_rho
             results['revenue'].append(profit_sum/self.train_size)
             results['regret'].append(regret_sum/self.train_size)
-            with open(os.path.join("result/" + args.save_train, 'train.json'), 'w') as f:
+            import time
+            curr = time.time()
+            with open(os.path.join("result/" + args.save_train, f'train_{curr}.json'), 'w') as f:
                 json.dump(results, f)
                 
             logging.info(f"Train: epoch={epoch + 1}, loss={loss_sum/self.train_size:.5}, "
@@ -198,7 +200,9 @@ class Trainer(BaseTrainer):
                 results['regret'].append(regret_sum/n_iter)
                 if not os.path.exists("result/"+args.save_test):
                     os.makedirs("result/" + args.save_test, exist_ok=True)
-                with open(os.path.join("result/" + args.save_test, 'test.json'), 'w') as f:
+                import time
+                curr = time.time()
+                with open(os.path.join("result/" + args.save_test, f'test_{curr}.json'), 'w') as f:
                     json.dump(results, f)
         logging.info(f"Test: loss={loss_sum/data_size:.5}, profit={(profit_sum)/data_size:.5}, "
                      f"regret={(regret_sum)/data_size:.5}, regret_max={regret_max:.5}")
